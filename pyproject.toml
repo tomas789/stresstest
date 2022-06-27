@@ -6,7 +6,8 @@ name = "stresstest"
 version = "0.1.0"
 
 [tool.poetry.dependencies]
-python = ">=3.6"
+python = ">=3.6.3,<4.0.0"
+rich = "*"
 
 [tool.poetry.dev-dependencies]
 
