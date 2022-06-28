@@ -3,10 +3,11 @@ authors = ["Tomas Krejci <tomas@krej.ci>"]
 description = "Stress test your system and Python interpreter."
 license = "AGPL"
 name = "stresstest"
-version = "0.1.0"
+version = "1.0.0"
 
 [tool.poetry.dependencies]
 python = ">=3.7,<4.0.0"
+requests = "*"
 rich = "*"
 
 [tool.poetry.dev-dependencies]
