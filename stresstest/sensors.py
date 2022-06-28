@@ -1,7 +1,9 @@
+import collections
 import json
 import os
 import subprocess
 import sys
+import types
 
 
 def collect():
@@ -19,7 +21,52 @@ def collect():
             values[name] = collector()
         except Exception as e:
             values[name] = f"Exception: {e}"
-    return values
+
+    values_serializable = to_json_serializable(values)
+
+    return json.dumps(values_serializable)
+
+
+def to_json_serializable(value):
+    if value is None:
+        return None
+    elif isinstance(value, (int, float)):
+        return value
+    elif isinstance(value, (list, tuple)):
+        return [to_json_serializable(x) for x in value]
+    elif callable(value):
+        try:
+            return to_json_serializable(value())
+        except Exception as e:
+            return f"Exception: {e}"
+    elif isinstance(value, dict):
+        values_serializable = {}
+        for key, value in value.items():
+            values_serializable[key] = to_json_serializable(value)
+        return values_serializable
+    elif isinstance(value, str):
+        return value
+    elif isinstance(
+        value,
+        (
+            type(sys.flags),
+            type(sys.float_info),
+            type(sys.hash_info),
+            type(sys.int_info),
+            type(sys.thread_info),
+            type(sys.version_info),
+            os.terminal_size,
+            type(os.uname()),
+            types.SimpleNamespace,
+        ),
+    ):
+        return {
+            n: to_json_serializable(getattr(sys.flags, n))
+            for n in sys.flags.__dir__()
+            if not n.startswith("__")
+        }
+    else:
+        return None
 
 
 def _collect_sys():

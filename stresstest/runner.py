@@ -11,7 +11,6 @@ from stresstest.stresstest import BaseStresstest
 class Runner:
     def run(self):
         sensor_data = collect()
-        pprint(sensor_data)
 
         table = Table()
         table.add_column("Test name")
